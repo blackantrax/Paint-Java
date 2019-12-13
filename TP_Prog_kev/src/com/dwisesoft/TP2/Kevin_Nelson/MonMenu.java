@@ -5,40 +5,51 @@
  */
 package com.dwisesoft.TP2.Kevin_Nelson;
 
+import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import javax.swing.event.AncestorListener;
 
 /**
- *
+ * Le code fait pour engeristrer et enregistrer sous n'étaient pas fonctionnel, raison pour laquel j'ai simplement
+ * laissé l'ouverture de la page de sauvegarde sans plus.
  * @author Kevin Nelson
  */
 @SuppressWarnings("serial")
-public class MonMenu extends JMenuBar {
+public class MonMenu extends JMenuBar implements ActionListener {
 
-    private final JMenu file, edit, doc, form, color, about;
-    JColorChooser kader;
-    JMenuItem nouveau, ouvrir, enregistre, enregistreSous,
+    private final JMenu fichier, editer, document, formes, couleurs, aPropos;
+    private JColorChooser choixCouleurs;
+    private String file;
+    private int reponse;
+    JMenuItem nouveau;
+    JMenuItem ouvrir;
+    JMenuItem enregistre, enregistreSous,
             quitter, répéter, annuler, propriete, propos, menuItemRect,
             menuItemEllipse, menuItemTriangle, menuItemRemplissage, vider,
             menuItemEfface, menuItemBlack, menuItemBlanc, menuItemRouge,
             menuItemVert, menuItemBleu, menuItemJaune, menuItemDefinir;
-    JLabel espace;
+    private JLabel espace;
 
     public MonMenu() {
         // JMenu extenciation 
-        file = new JMenu("Fichier");
-        edit = new JMenu("Edition");
-        doc = new JMenu("Document");
-        form = new JMenu("Formes");
-        color = new JMenu("Couleurs");
-        about = new JMenu(" ? ");
-        kader = new JColorChooser();
+        fichier = new JMenu("Fichier");
+        editer = new JMenu("Edition");
+        document = new JMenu("Document");
+        formes = new JMenu("Formes");
+        couleurs = new JMenu("Couleurs");
+        aPropos = new JMenu(" ? ");
+        choixCouleurs = new JColorChooser();
 
         //JMenuItem extenciation
         nouveau = new JMenuItem("   Nouveau...");
@@ -129,39 +140,100 @@ public class MonMenu extends JMenuBar {
         menuItemRemplissage.setIcon(new ImageIcon(getClass().
                 getResource("/images/fill.png")));
         // Les sous menu
-        file.add(nouveau);
-        file.add(ouvrir);
-        file.addSeparator();
-        file.add(enregistre);
-        file.add(enregistreSous);
-        file.addSeparator();
-        file.add(quitter);
-        edit.add(annuler);
-        edit.add(répéter);
-        doc.add(propriete);
-        doc.add(vider);
-        about.add(propos);
-        form.add(menuItemRect);
-        form.add(menuItemEllipse);
-        form.add(menuItemTriangle);
-        form.add(menuItemRemplissage);
-        color.add(menuItemEfface);
-        color.addSeparator();
-        color.add(menuItemBlack);
-        color.add(menuItemBlanc);
-        color.add(menuItemRouge);
-        color.add(menuItemVert);
-        color.add(menuItemBleu);
-        color.add(menuItemJaune);
-        color.addSeparator();
-        color.add(menuItemDefinir);
+        fichier.add(nouveau);
+        fichier.add(ouvrir);
+        fichier.addSeparator();
+        fichier.add(enregistre);
+        fichier.add(enregistreSous);
+        fichier.addSeparator();
+        fichier.add(quitter);
+        editer.add(annuler);
+        editer.add(répéter);
+        document.add(propriete);
+        document.add(vider);
+        aPropos.add(propos);
+        formes.add(menuItemRect);
+        formes.add(menuItemEllipse);
+        formes.add(menuItemTriangle);
+        formes.add(menuItemRemplissage);
+        couleurs.add(menuItemEfface);
+        couleurs.addSeparator();
+        couleurs.add(menuItemBlack);
+        couleurs.add(menuItemBlanc);
+        couleurs.add(menuItemRouge);
+        couleurs.add(menuItemVert);
+        couleurs.add(menuItemBleu);
+        couleurs.add(menuItemJaune);
+        couleurs.addSeparator();
+        couleurs.add(menuItemDefinir);
         // MenuBer
-        super.add(file);
-        super.add(edit);
-        super.add(doc);
-        super.add(form);
-        super.add(color);
-        super.add(about);
+        super.add(fichier);
+        super.add(editer);
+        super.add(document);
+        super.add(formes);
+        super.add(couleurs);
+        super.add(aPropos);
+
+        enregistre.addActionListener((ActionListener) this);
+        enregistreSous.addActionListener((ActionListener) this);
+        nouveau.addActionListener((ActionListener) this);
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == enregistre) {
+
+            try {
+
+                JFileChooser chooser = new JFileChooser();
+
+                // Dossier Courant
+                chooser.setCurrentDirectory(new File("." + File.separator));
+
+                //Affichage et récupération de la réponse de l'utilisateur
+                reponse = chooser.showDialog(chooser, "Enregistrer sous");
+
+                // Si l'utilisateur clique sur OK
+                if (reponse == JFileChooser.APPROVE_OPTION) {
+
+                    // Récupération du chemin du fichier
+                    file = chooser.getSelectedFile().toString();
+
+                    //Ecriture du fichier
+                    //...
+                }
+            } catch (HeadlessException he) {
+                he.printStackTrace();
+            }
+        } else if (e.getSource() == enregistreSous) {
+            
+              try {
+
+                JFileChooser chooser = new JFileChooser();
+
+                // Dossier Courant
+                chooser.setCurrentDirectory(new File("." + File.separator));
+
+                //Affichage et récupération de la réponse de l'utilisateur
+                reponse = chooser.showDialog(chooser, "Enregistrer sous");
+
+                // Si l'utilisateur clique sur OK
+                if (reponse == JFileChooser.APPROVE_OPTION) {
+
+                    // Récupération du chemin du fichier
+                    file = chooser.getSelectedFile().toString();
+
+                    //Ecriture du fichier
+                    //...
+                }
+            } catch (HeadlessException he) {
+                he.printStackTrace();
+            }
+
+        } else if (e.getSource() == nouveau) {
+            vider.addActionListener((ActionListener) this);
+        }
 
     }
 
