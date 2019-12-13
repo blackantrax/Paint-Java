@@ -26,6 +26,7 @@ import static java.awt.Color.*;
 import java.awt.Graphics;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import static java.lang.System.exit;
 import java.util.ArrayList;
 import javax.swing.*;
 
@@ -111,6 +112,7 @@ public class DrawPanel extends JPanel implements ActionListener {
             public void mouseDragged(MouseEvent e) {
                 //On récupère les coordonnées de la souris et on enlève
                 //  la moitié de la taille du pointeur pour centrer le tracé
+                // Sans cette opération, le tracé est n'est pas calibré
                 pointsD.add(new Points(e.getX() - (taillex / 2),
                         e.getY() - (tailley / 2), taillex, tailley,
                         pointerColor, pointeurType, opacity));
@@ -122,7 +124,7 @@ public class DrawPanel extends JPanel implements ActionListener {
             }
         });
 
-        //Toutes mes actions listener
+        //Action Listener sur les différentes options
         definir.addActionListener(this);
         menuBar.propos.addActionListener(this);
         BarreTache.clear.addActionListener(this);
@@ -181,9 +183,9 @@ public class DrawPanel extends JPanel implements ActionListener {
         if (this.vider) {
             this.vider = false;
         } else {
-            //On parcourt notre collection de points
+            //On a une collection qu'on parcours afin de modifier la couleur
             this.pointsD.stream().map((p) -> {
-                //On récupère la couleur
+                //On récupère la couleur choisie
                 g.setColor(p.getColor());
                 return p;
             }).forEachOrdered((p) -> {
@@ -202,11 +204,12 @@ public class DrawPanel extends JPanel implements ActionListener {
             });
         }
     }
-
-//vider le contenu
+/**
+ * vider le contenu lorsque l'utilisateur clique sur <b>Vider</b>
+ */
     public void erase() {
         this.vider = true;
-        this.pointsD = new ArrayList<>();
+        this.pointsD = new ArrayList<>();   
         repaint();
     }
 
@@ -216,8 +219,8 @@ public class DrawPanel extends JPanel implements ActionListener {
     }
 
     /**
-     * C'est ici que je fais toutes mes actions listerner
-     *
+     * On exécute les opérations en fonction de l'action listener activé par le 
+     * click de l'utilisateur
      * @param e
      */
     @Override
@@ -255,10 +258,11 @@ public class DrawPanel extends JPanel implements ActionListener {
             CreetJDialogue();
         } else if (e.getSource() == menuBar.propos) {
             JOptionPane.showMessageDialog(null, "       "
-                    + "Ce programme à était dévéloppé par :"
-                    + " Kevin Nelson \nÉtudiant de la "
-                    + "technique en informatique en"
-                    + " troisième année", " Network Security",
+                    + "Ce programme a été dévéloppé sous la supervision de"
+                    + "\n                                      Madame Najoua G.\n"
+                    + "Dans le cadre du cours de programmation orienté objet"
+                    + "\n                    Par des élèves en troisième année\n"
+                    + "                               Pierre - Kevin - Malene", " Network Security",
                     JOptionPane.INFORMATION_MESSAGE);
         } else if (e.getSource() == menuBar.propriete) {
             CreerJframe();
@@ -314,9 +318,9 @@ public class DrawPanel extends JPanel implements ActionListener {
                 || e.getSource() == BarreTache.definir) {
             CreetJDialoguePinceau();
         }
-//        else if (e.getSource() == menuBar.quitter) {
-//            exit(0);
-//        }
+        else if (e.getSource() == menuBar.quitter) {
+            exit(0);
+        }
     }
 
     /**
@@ -358,7 +362,7 @@ public class DrawPanel extends JPanel implements ActionListener {
      * Dans ce block de code, je crée un JDialogue2 qui va contenir mon jchooser
      * qui permet changer des couleurs. Le block contient aussi deux actons
      * listener qui permettent de valider ou d'annuler la modification faite.
-     * Cette methode est void...
+     * Cette methode est de tyoe <b><i>void</i></b> parce qu'on n'a pas besoin de retourner l'objet
      */
     void CreetJDialoguePinceau() {
         JPanel pane = new JPanel();
@@ -394,7 +398,7 @@ public class DrawPanel extends JPanel implements ActionListener {
     private void CreerJframe() {
         JPanel cellule1 = new JPanel(), cellule2 = new JPanel(),
                 cellule3 = new JPanel(), cellule4 = new JPanel();
-        /// Les spinner et
+        /// Les spinner et le JDialog 
         JSpinner spinner1 = new JSpinner(
                 new SpinnerNumberModel(20, 0, 50, 1));
         JSpinner spinner2 = new JSpinner(
